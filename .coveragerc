@@ -1,0 +1,6 @@
+[report]
+include =
+    src/scoreboard/*
+omit =
+    */test*
+    */upgrades/*
