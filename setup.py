@@ -39,6 +39,6 @@ setup(
         'selenium>=3.0.2',
     ],
     entry_points={
-        'console_scripts': ['scoreboard-test = scoreboard.test.run:run_cli']
+        'console_scripts': ['scoreboard-test = scoreboard.test.main:run_cli']
     }
 )
