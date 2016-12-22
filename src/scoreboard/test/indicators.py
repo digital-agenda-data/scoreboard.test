@@ -34,15 +34,12 @@ class TableTestCase(BrowserTestCase):
         """ Table exists. """
         try:
             table = self.browser.find_element_by_class_name(
-                CSS_CLASS_INDICATORS_TABLE
-            )
+                CSS_CLASS_INDICATORS_TABLE)
         except NoSuchElementException:
             table = None
 
-        fail_msg = "[{}] Can't find .{}!".format(
-            self.url, CSS_CLASS_INDICATORS_TABLE
-        )
-        self.assertNotEqual(table, None, fail_msg)
+        self.assertTrue(
+            table, 'Can\'t find ".{}"!'.format(CSS_CLASS_INDICATORS_TABLE))
 
     def test_table_rows(self):
         """ Table has acceptable number of rows. """
@@ -51,7 +48,6 @@ class TableTestCase(BrowserTestCase):
         )
         rows = table.find_elements_by_tag_name('tr')
 
-        fail_msg = '[{}] {} has too few rows!'.format(
-            self.url, CSS_CLASS_INDICATORS_TABLE)
+        fail_msg = '".{}" has too few rows!'.format(CSS_CLASS_INDICATORS_TABLE)
 
         self.assertGreaterEqual(len(rows), 2, fail_msg)

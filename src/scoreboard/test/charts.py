@@ -11,9 +11,12 @@ CSS_SELECTOR_CHARTS = '.scoreboard-visualizations-listing .thumbnail-area a'
 
 ID_CHART = 'the-chart'
 CSS_SELECTOR_CHART_LOADING = '#{}.loading-small'.format(ID_CHART)
+CSS_SELECTOR_CHART_CONTENT = '#{chart_id} svg, #{chart_id} table'.format(
+    chart_id=ID_CHART
+)
 
 TIMEOUT_CHART = 10
-MSG_TIMEOUT_CHART = '[{}] Chart failed to load in {} seconds!'
+MSG_TIMEOUT_CHART = 'Chart failed to load in {} seconds!'.format(TIMEOUT_CHART)
 
 
 def suite(browser: WebDriver, base_url):
@@ -27,23 +30,20 @@ def suite(browser: WebDriver, base_url):
         charts = browser.find_elements_by_css_selector(CSS_SELECTOR_CHARTS)
 
         for chart in charts:
-            for name in TableTestCase.my_tests():
-                testcase = TableTestCase(
+            for name in ChartsTestCase.my_tests():
+                testcase = ChartsTestCase(
                     name, browser, chart.get_attribute('href'))
                 test_suite.addTest(testcase)
 
     return test_suite
 
 
-class TableTestCase(BrowserTestCase):
+class ChartsTestCase(BrowserTestCase):
 
     def setUp(self):
         self.browser.get(self.url)
-        WebDriverWait(self.browser, TIMEOUT_CHART).until(
-            lambda d: (
-                not d.find_elements_by_css_selector(CSS_SELECTOR_CHART_LOADING)
-            ), message=MSG_TIMEOUT_CHART.format(self.url, TIMEOUT_CHART)
-        )
+        wait = WebDriverWait(self.browser, TIMEOUT_CHART)
+        wait.until(_check_chart_loading, message=MSG_TIMEOUT_CHART)
 
     def test_chart_exists(self):
         """ Chart container exists. """
@@ -52,13 +52,28 @@ class TableTestCase(BrowserTestCase):
         except NoSuchElementException:
             chart = None
 
-        fail_msg = "[{}] Can't find .{}!".format(self.url, ID_CHART)
-        self.assertNotEqual(chart, None, fail_msg)
+        self.assertTrue(chart, 'Can\'t find "{}"!'.format(ID_CHART))
 
     def test_chart_content(self):
         """ Chart svg has child elements. """
-        svg = self.browser.find_element_by_tag_name('svg')
+        try:
+            svg = self.browser.find_element_by_css_selector(
+                CSS_SELECTOR_CHART_CONTENT)
+        except NoSuchElementException:
+            svg = None
+
+        self.assertTrue(svg, 'Can\'t find "{}"!'.format(
+            CSS_SELECTOR_CHART_CONTENT))
+
         contents = svg.find_elements_by_xpath('*')
 
-        fail_msg = '[{}] {} appears to be empty!'.format(self.url, ID_CHART)
+        fail_msg = '"{}" appears to be empty!'.format(
+            self.url, CSS_SELECTOR_CHART_CONTENT)
+
         self.assertGreater(len(contents), 0, fail_msg)
+
+
+def _check_chart_loading(browser):
+    return not browser.find_elements_by_css_selector(
+        CSS_SELECTOR_CHART_LOADING
+    )

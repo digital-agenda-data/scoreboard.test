@@ -29,10 +29,9 @@ class BrowserTestCase(unittest.TestCase):
         suffix = suffix or self._get_screenshot_suffix()
         name = '{}/screenshot_{}.png'.format(os.getcwd(), suffix)
         self.browser.save_screenshot(name)
-        print('Saved {}.'.format(name))
 
     def _get_screenshot_suffix(self) -> str:
-        return '_'.join(self.browser.current_url.split('/')[2:])
+        return '_'.join(self.browser.current_url.split('#')[0].split('/')[2:])
 
 
 class BrowserTestResult(unittest.runner.TextTestResult):
@@ -50,4 +49,4 @@ class BrowserTestResult(unittest.runner.TextTestResult):
         """ Include url in the test description.
         """
         text = super().getDescription(test)
-        return '[{}] {}'.format(test.browser.current_url, text)
+        return '[{}] {}'.format(test.url, text)
