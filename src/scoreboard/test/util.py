@@ -69,4 +69,15 @@ def build_cli_arguments() -> argparse.ArgumentParser:
         '-P', '--browserpath', default=None,
         help='Custom path to browser executable.'
     )
+
+    parser.add_argument(
+        '-sw', '--screenwidth', default=1024,
+        help='Screen width. Default: 1024.'
+    )
+
+    parser.add_argument(
+        '-sh', '--screenheight', default=768,
+        help='Screen width. Default: 768.'
+    )
+
     return parser

@@ -1,4 +1,3 @@
 graft src/scoreboard
-graft docs
 include *.rst
 global-exclude *.pyc

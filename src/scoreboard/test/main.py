@@ -3,14 +3,24 @@ from scoreboard.test import common
 from scoreboard.test import util
 
 
-def run(base_url, suite, verbosity=1, browser='chrome', browser_path=None):
+def run(base_url,
+        suite,
+        resolution=(1024, 768),
+        verbosity=1,
+        browser='chrome',
+        browser_path=None):
+
     browser = util.get_browser(browser, browser_path)
+    browser.set_window_size(*resolution)
+
     test_runner = unittest.TextTestRunner(
         verbosity=verbosity,
         resultclass=common.BrowserTestResult
     )
+
     test_suite = suite(browser, base_url)
     test_runner.run(test_suite)
+
     browser.quit()
 
 
@@ -21,7 +31,13 @@ def run_cli():
     for test_name in args.test:
         util.validate_test_name(test_name)
         suite = util.ARG_TESTS[test_name]
-        run(args.url, suite, args.verbose, args.browser, args.browserpath)
+
+        run(base_url=args.url,
+            suite=suite,
+            resolution=(args.screenwidth, args.screenheight),
+            verbosity=args.verbose,
+            browser=args.browser,
+            browser_path=args.browserpath)
 
 if __name__ == '__main__':
     run_cli()

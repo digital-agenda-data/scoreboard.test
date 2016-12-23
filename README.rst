@@ -1,34 +1,37 @@
-.. This README is meant for consumption by humans and pypi. Pypi can render rst files so please do not use Sphinx features.
-   If you want to learn more about writing documentation, please check out: http://docs.plone.org/about/documentation_styleguide.html
-   This text does not appear on pypi or github. It is a comment.
-
-==============================================================================
+===============
 scoreboard.test
-==============================================================================
+===============
 
 Selenium based automated testing.
-
-
-Documentation
--------------
-
-Full documentation for end users can be found in the "docs" folder.
 
 
 Installation
 ------------
 
-Install scoreboard.test by adding it to your buildout::
+::
 
-    [buildout]
+    $ virtualenv scoreboard
+    $ cd scoreboard
+    $ source ./bin/activate
+    $ pip install -U https://github.com/eaudeweb/scoreboard.test/archive/master.zip
+    $ scoreboard-test -h
 
-    ...
-
-    eggs =
-        scoreboard.test
 
 
-and then running ``bin/buildout``
+Usage
+-----
+
+To run the ``indicators``, ``charts`` and ``dataset`` tests in Firefox,
+specifying the path to ``geckodriver`` at the default ``1024x768`` resolution: ::
+
+    $ scoreboard-test -v -B firefox -P /usr/bin/geckodriver https://digital-agenda-data.eu indicators charts dataset
+
+
+To run all tests in phantomjs in glorious 4K resolution: ::
+
+    $ scoreboard-test -v -B phantomjs -P /usr/bin/phantomjs -sw 3840 -sh 2160 https://digital-agenda-data.eu
+
+Failed tests and tests that encounter an error will save a screenshot in the current working directory.
 
 
 Contribute

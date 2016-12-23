@@ -1,5 +1,0 @@
-====================
-scoreboard.test
-====================
-
-User documentation
