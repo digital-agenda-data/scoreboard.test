@@ -7,7 +7,7 @@ Selenium based automated testing.
 
 Installation
 ------------
-
+This package requires **Python 3.5**!
 ::
 
     $ virtualenv scoreboard
