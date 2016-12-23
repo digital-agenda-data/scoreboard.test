@@ -18,9 +18,26 @@ CSS_SELECTOR_CHART_CONTENT = '#{chart_id} svg, #{chart_id} table'.format(
 TIMEOUT_CHART = 10
 MSG_TIMEOUT_CHART = 'Chart failed to load in {} seconds!'.format(TIMEOUT_CHART)
 
+# Downloads
+CSS_SELECTOR_EMBED = 'a#embed.btn-export'
+SCRIPT_DOWNLOAD = (
+    'var share = App.visualization.share;'
+    'var no_evt = {'
+    '   preventDefault: function(){},'
+    '   stopPropagation: function(){}'
+    '};'
+)
+SCRIPT_IMAGE_DOWNLOAD = (
+    SCRIPT_DOWNLOAD + 'share.highcharts_download_local(no_evt);'
+)
+
+SCRIPT_CSV_DOWNLOAD = SCRIPT_DOWNLOAD + 'share.request_csv(no_evt);'
+SCRIPT_XLS_DOWNLOAD = SCRIPT_DOWNLOAD + 'share.request_excel(no_evt);'
+
 
 def suite(browser: WebDriver, base_url):
     browser.get(base_url)
+    _consent_cookie(browser)
     datasets = browser.find_elements_by_css_selector(CSS_SELECTOR_DATASETS)
 
     test_suite = unittest.TestSuite()
@@ -72,8 +89,33 @@ class ChartsTestCase(BrowserTestCase):
 
         self.assertGreater(len(contents), 0, fail_msg)
 
+    def test_downloads(self):
+        """ Metadata and structure download.
+            Since downloads are via JS using Backbone to add
+            event handlers to buttons. Testing is a bit tricky.
+
+            Testing instead that the functions handling
+            the download don't crash.
+        """
+        self.browser.execute_script(SCRIPT_IMAGE_DOWNLOAD)
+        self.browser.execute_script(SCRIPT_CSV_DOWNLOAD)
+        self.browser.execute_script(SCRIPT_XLS_DOWNLOAD)
+
+    def test_embedded_url(self):
+        """ Test embeddable url.
+        """
+        self.browser.find_element_by_css_selector(CSS_SELECTOR_EMBED).click()
+
+        url_end = self.browser.current_url.split('#')[0].split('/')[-1]
+        self.assertEqual(url_end, 'embedded')
+
 
 def _check_chart_loading(browser):
     return not browser.find_elements_by_css_selector(
         CSS_SELECTOR_CHART_LOADING
     )
+
+
+def _consent_cookie(browser):
+    """ Accept cookies so we can click on things. """
+    browser.find_element_by_css_selector('.cookie-consent button').click()
