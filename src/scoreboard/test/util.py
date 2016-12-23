@@ -2,11 +2,13 @@ import argparse
 from selenium import webdriver
 from scoreboard.test import indicators
 from scoreboard.test import charts
+from scoreboard.test import dataset
 
 
 ARG_TESTS = {
     'indicators': indicators.suite,
     'charts': charts.suite,
+    'dataset': dataset.suite,
 }
 
 
