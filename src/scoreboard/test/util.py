@@ -77,7 +77,7 @@ def build_cli_arguments() -> argparse.ArgumentParser:
 
     parser.add_argument(
         '-sh', '--screenheight', default=768,
-        help='Screen width. Default: 768.'
+        help='Screen height. Default: 768.'
     )
 
     return parser
