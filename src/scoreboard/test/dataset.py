@@ -81,7 +81,8 @@ class DatasetTestCase(BrowserTestCase):
         resp = request.urlopen(url.get_attribute('href'))
 
         self.assertEqual(resp.getcode(), 200)
-        self.assertEqual(resp.info().get_content_type(), 'application/x-gzip')
+        # self.assertEqual(resp.info().get_content_type(), 'application/x-gzip')
+        self.assertEqual(resp.info().get_content_type(), 'application/octet-stream')
         self.assertGreater(resp.length, 0)
 
     def test_download_html(self):

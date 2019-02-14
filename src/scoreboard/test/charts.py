@@ -15,7 +15,7 @@ CSS_SELECTOR_CHART_CONTENT = '#{chart_id} svg, #{chart_id} table'.format(
     chart_id=ID_CHART
 )
 
-TIMEOUT_CHART = 10
+TIMEOUT_CHART = 15
 MSG_TIMEOUT_CHART = 'Chart failed to load in {} seconds!'.format(TIMEOUT_CHART)
 
 # Downloads
